@@ -44,8 +44,6 @@ class UserController extends AbstractActionController
 
                     $eventManager->trigger(UserEvent::USER_REG_ERROR, $this, $userEvent);
                 }
-
-
             }
         }
 
