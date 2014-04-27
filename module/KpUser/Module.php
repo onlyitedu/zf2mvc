@@ -6,18 +6,18 @@
 
 namespace KpUser;
 
-use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
+use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\MvcEvent;
-use Zend\Validator\AbstractValidator;
 
 
 class Module implements ConfigProviderInterface,
     AutoloaderProviderInterface,
-    ControllerProviderInterface
+    ControllerProviderInterface,
+    DependencyIndicatorInterface
 {
 
     public function getAutoloaderConfig()
@@ -31,6 +31,11 @@ class Module implements ConfigProviderInterface,
         );
     }
 
+    public function getModuleDependencies(){
+        return array(
+            'KpBase'
+        );
+    }
 
     public function getConfig()
     {
@@ -60,15 +65,6 @@ class Module implements ConfigProviderInterface,
             $controller->layout('KpUser/Layout');
         }, 2);
 
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
-            $serviceManager = $e->getApplication()->getServiceManager();
-            $adapater = $serviceManager->get('Zend\Db\Adapter\Adapter');
-            GlobalAdapterFeature::setStaticAdapter($adapater);
-        }, 2);
-
-        $translator = $target->getServiceManager()->get('MvcTranslator');
-        $translator->addTranslationFile('phpArray', './vendor/zendframework/zendframework/resources/languages/zh/Zend_Validate.php', 'default', 'zh_CN');
-        AbstractValidator::setDefaultTranslator($translator);
 
     }
 

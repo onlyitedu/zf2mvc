@@ -6,7 +6,9 @@
 
 namespace KpUser\Form;
 
+use KpUser\Entity\UserEntity;
 use Zend\Form\Form;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
 class UserBaseForm extends Form{
 
@@ -14,6 +16,7 @@ class UserBaseForm extends Form{
 
         parent::__construct('user');
 
+        $this->setHydrator(new ClassMethods())->setObject(new UserEntity());
         $this->setAttribute('class','form-horizontal');
 
         $this->add(array(

@@ -34,4 +34,10 @@ return array(
             'KpUser/Layout'           => __DIR__ . '/../view/layout/layout.phtml',
         )
     ),
+    'service_manager'=>array(
+        'invokables'=>array(
+            'KpUser\Model\UserTable'=>'KpUser\Model\UserTable'
+        ),
+
+    )
 );

@@ -6,9 +6,10 @@
 
 namespace KpUser\InputFilter;
 
+use KpUser\Model\UserModel;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\InputFilter\InputFilter;
-use Zend\Validator\Db\AbstractDb;
+
 
 class UserBaseInputFilter extends InputFilter
 {
@@ -16,7 +17,7 @@ class UserBaseInputFilter extends InputFilter
     {
         $this->add(array(
             'name' => 'username',
-            'required'=>true,
+            'required' => true,
             'filters' => array(
                 array(
                     'name' => 'StringTrim'
@@ -37,15 +38,34 @@ class UserBaseInputFilter extends InputFilter
                     'name' => 'Db\NoRecordExists',
                     'options' => array(
                         'table' => 'kp_user',
-                        'field'=>'username',
-                        'adapter'=>GlobalAdapterFeature::getStaticAdapter(),
-                        'messages' => array(
-                            //AbstractDb::ERROR_RECORD_FOUND => '用户名重复'
-                        ),
+                        'field' => 'username',
+                        'adapter' => GlobalAdapterFeature::getStaticAdapter()
                     )
                 ),
 
             )
+        ));
+
+        $this->add(array(
+            'name' => 'password',
+            'required' => false,
+            'filters' => array(
+                array(
+                    'name' => 'StringTrim'
+                ),
+                array(
+                    'name' => 'callback',
+                    'options' => array(
+                        'callback' => function ($password) {
+                                if (!empty($password)) {
+                                    return UserModel::encryption($password);
+                                }
+                                return $password;
+                            }
+                    )
+                )
+            ),
+
         ));
     }
 }

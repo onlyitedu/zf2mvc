@@ -12,5 +12,25 @@ class UserRegInputFilter extends UserBaseInputFilter
     public function __construct()
     {
         parent::__construct();
+
+        $this->add(array(
+            'name' => 'password_confirm',
+            'required'=>true,
+            'filters' => array(
+                array(
+                    'name' => 'StringTrim'
+                ),
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'Identical',
+                    'options' => array(
+                        'token' => 'password'
+                    )
+                ),
+            )
+        ));
+
+        $this->get('password')->setRequired(true);
     }
 }

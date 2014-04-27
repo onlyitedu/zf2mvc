@@ -6,6 +6,9 @@
 
 namespace KpUser\Form;
 
+use KpUser\InputFilter\UserRegInputFilter;
+
+
 class UserRegForm extends UserBaseForm
 {
 
@@ -13,26 +16,28 @@ class UserRegForm extends UserBaseForm
     {
         parent::__construct();
 
+        $this->setInputFilter(new UserRegInputFilter());
+
         $this->add(array(
             'name' => 'password_confirm',
             'type' => 'password',
-            'attributes'=>array(
-                'class'=>'form-control'
+            'attributes' => array(
+                'class' => 'form-control'
             ),
             'options' => array(
                 'label' => 'password confirm',
-                'label_attributes'=>array(
-                    'class'=>'col-sm-2 control-label'
+                'label_attributes' => array(
+                    'class' => 'col-sm-2 control-label'
                 )
             ),
         ));
 
         $this->add(array(
-            'name'=>'submit',
-            'type'=>'submit',
-            'attributes'=>array(
-                'class'=>"btn btn-default",
-                'value'=>'reg',
+            'name' => 'submit',
+            'type' => 'submit',
+            'attributes' => array(
+                'class' => "btn btn-default",
+                'value' => 'reg',
             )
         ));
     }
