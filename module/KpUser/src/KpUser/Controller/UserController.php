@@ -6,6 +6,7 @@
 
 namespace KpUser\Controller;
 
+use KpUser\Event\UserEvent;
 use KpUser\Form\UserRegForm;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -23,9 +24,28 @@ class UserController extends AbstractActionController
             if ($form->isValid()) {
 
                 $formUserEntity = $form->getData();
-                $userTable = $this->getServiceLocator()->get('KpUser\Model\UserTable');
-                $userTable->save($formUserEntity);
-              
+
+                $eventManager = $this->getEventManager();
+                $userEvent = new UserEvent();
+                $userEvent->setUserEntity($formUserEntity)->setForm($form);
+
+                $responseCollection = $eventManager->trigger(UserEvent::USER_REG_PRE, $this, $userEvent);
+
+                if ($responseCollection->last() !== false) {
+
+                    $userTable = $this->getServiceLocator()->get('KpUser\Model\UserTable');
+
+                    if ($id = $userTable->save($formUserEntity)) {
+                        $userEvent->getUserEntity()->setId($id);
+                        $eventManager->trigger(UserEvent::USER_REG_POST, $this, $userEvent);
+
+                        return $this->redirect()->toRoute('KpUser-login');
+                    }
+
+                    $eventManager->trigger(UserEvent::USER_REG_ERROR, $this, $userEvent);
+                }
+
+
             }
         }
 

@@ -6,6 +6,7 @@
 
 namespace KpUser;
 
+use KpUser\Listener\UserRegListener;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
@@ -64,6 +65,9 @@ class Module implements ConfigProviderInterface,
             $controller = $e->getTarget();
             $controller->layout('KpUser/Layout');
         }, 2);
+
+
+        $eventManager->attach(new UserRegListener());
 
 
     }

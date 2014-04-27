@@ -9,6 +9,8 @@ namespace KpUser\Model;
 class UserModel
 {
     const SALT = '1=02o013lsd';
+    const DEFAULT_STATUS = 1;
+    const DEFAULT_TYPE = 1;
 
     public static function encryption($password)
     {
